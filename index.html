@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication</title>
+    <style>
+        /* RESET & BASE STYLES */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0d0d0d; /* Very dark background */
+            color: #ffffff;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* Monospaced font */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* CONTAINER */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* INPUT GROUP */
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* INPUT FIELD */
+        input[type="text"] {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            width: 260px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #555;
+        }
+
+        input[type="text"]::placeholder {
+            color: #666;
+        }
+
+        /* CONTINUE BUTTON */
+        button {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #252525;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* LINKS SECTION (Support, Discord, Telegram) */
+        .links {
+            display: flex;
+            gap: 20px;
+            margin-top: 5px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #888;
+            font-size: 13px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .link-item:hover {
+            color: #bbb;
+        }
+
+        /* SVG ICONS */
+        .icon {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ARROW ICON (The little arrow at the end of links) */
+        .arrow {
+            width: 10px;
+            height: 10px;
+            opacity: 0.7;
+        }
+
+        /* SERVER INFO FOOTER */
+        .footer-info {
+            margin-top: 15px;
+            color: #444;
+            font-size: 12px;
+        }
+
+        .server-name {
+            color: #ddd; /* Highlighted white-ish */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="input-group">
+            <input type="text" id="keyInput" placeholder="Enter your key" autocomplete="off">
+            <button onclick="validateKey()">Continue</button>
+        </div>
+
+        <div class="links">
+            <a href="#" class="link-item">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                Support
+                <svg class="icon arrow" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            </a>
+
+            <a href="#" class="link-item">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                Discord
+                <svg class="icon arrow" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            </a>
+
+            <a href="#" class="link-item">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                Telegram
+                <svg class="icon arrow" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            </a>
+        </div>
+
+        <div class="footer-info">
+            You are on <span class="server-name">europe-west4-b</span> server
+        </div>
+    </div>
+
+    <script>
+        function validateKey() {
+            // The secret key
+            const validKey = "9dia-k48a-l1i4-95kA";
+            
+            // Get input value
+            const inputElement = document.getElementById("keyInput");
+            const userKey = inputElement.value;
+
+            if (userKey === validKey) {
+                // Key is valid -> Trigger download of the local Release.rar file
+                downloadLocalFile("Release.rar");
+                
+                // Visual feedback
+                inputElement.style.borderColor = "#4caf50"; // Green border
+                alert("Key Valid! Downloading Release.rar...");
+            } else {
+                // Key is invalid
+                inputElement.style.borderColor = "#f44336"; // Red border
+                alert("Invalid Key");
+            }
+        }
+
+        // Helper function to trigger the download of a file existing in the same directory
+        function downloadLocalFile(filename) {
+            var element = document.createElement('a');
+            // This assumes the Release.rar is in the same folder as this HTML file
+            element.setAttribute('href', './' + filename);
+            element.setAttribute('download', filename);
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+
+            document.body.removeChild(element);
+        }
+
+        // Allow pressing "Enter" to submit
+        document.getElementById("keyInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                validateKey();
+            }
+        });
+    </script>
+</body>
+</html>
